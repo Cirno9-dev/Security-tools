@@ -1,4 +1,0 @@
-queue
-optparse
-requests
-threading
