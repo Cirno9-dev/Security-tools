@@ -71,6 +71,6 @@ if __name__ == "__main__":
         pass
     else:
         parse.print_help()
-        print('example:')
+        print('\nExample:')
         print('[#]-> python BannerScan.py -t 127.0.0.1 -p 80,25,22,21')
         print('[#]-> python BannerScan.py -t www.example.com -p 80,25')

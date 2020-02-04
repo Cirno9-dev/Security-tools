@@ -131,7 +131,7 @@ if __name__ == "__main__":
         scanner.start()
     else:
         oparse.print_help()
-        print("usage example:")
+        print("\nExample:")
         print("[#]-> python DirScan.py -u http://www.example.com -s php -t 20")
         print("[#]-> html/htm/txt/js/css are all in scanning.If you want scan your want ,please input your option")
         print("[#]-> example: python DirScan.py -u http://www.example.com -s js,php")

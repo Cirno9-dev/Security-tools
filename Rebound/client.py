@@ -37,5 +37,5 @@ if __name__ == "__main__":
         connect(options.target,options.port)
     else:
         parse.print_help()
-        print('example:')
+        print('\nExample:')
         print('[#]-> python client.py -t 192.168.1.5 -p 445')

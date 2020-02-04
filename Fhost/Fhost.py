@@ -68,6 +68,6 @@ if __name__ == "__main__":
         scan(ips)
     else:
         parse.print_help()
-        print('example:')
+        print('\nExample:')
         print('[#]-> python Fhost.py -i 192.168.1.0/24')
         print('[#]-> python Fhost.py -i 192.168.1.5')
