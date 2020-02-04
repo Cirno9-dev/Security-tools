@@ -32,7 +32,6 @@ The result file is www.example.com.html.  The output is an HTML file for easy ac
 
 ```shell
 cd DirScan
-pip install -r requirements.txt
 python DirScan.py
 ```
 
