@@ -30,7 +30,7 @@ It is used to test anonymous login and blast FTP account passwords.<br>
 In the future, I'll also add the ability to upload trojans and malicious code.<br>
 
 **2020.2.6**<br>
-**Add the Vsftpd_234_backdoor vulnerability detection function**
+**Add the Vsftpd_234_backdoor vulnerability detection function**<br>
 **Add multithreaded blasting**
 
 ## Usage

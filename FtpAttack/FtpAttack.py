@@ -12,8 +12,8 @@ def anonLogin(target,port):
         ftp = ftplib.FTP()
         ftp.connect(target,port)
         ftp.login('anonymous'.strip(),'abcd'.strip())
-        print('[+] %s:%d : anonymous login successful'%(target,port))
         ftp.quit()
+        print('[+] %s:%d : anonymous login successful'%(target,port))
     except :
         print('[-] %s:%d : anonymous login failed'%(target,port))
 
@@ -97,8 +97,7 @@ def vsftpd_234(target,port):
         tcpClient.connect((target,6200))
         tcpClient.close()
         print('[+] vsftpd_234_backdoor exists')
-    except Exception as e:
-        print(e)
+    except:
         print('[-] vsftpd_234_backdoor does not exist')
 
 
