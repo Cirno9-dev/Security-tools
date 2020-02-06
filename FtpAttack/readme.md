@@ -28,10 +28,10 @@
 A tool to attack the ftp<br>
 It is used to test anonymous login and blast FTP account passwords.<br>
 In the future, I'll also add the ability to upload trojans and malicious code.<br>
-A multithreaded burst will be added shortly<br>
 
 **2020.2.6**<br>
 **Add the Vsftpd_234_backdoor vulnerability detection function**
+**Add multithreaded blasting**
 
 ## Usage
 

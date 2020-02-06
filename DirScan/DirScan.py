@@ -50,7 +50,7 @@ class DirScan():
 
         # 进度条，方便查看进行到哪里了
         def progress_bar(self):
-            sys.stdout.write(' '*20)
+            sys.stdout.write(' '*50)
             per = 100-float(self.queue.qsize())/float(self.total)*100
             msg = '%s Left [%s All] Scan in %1.1f%%'%(self.queue.qsize(),self.total,per)
             sys.stdout.write('\r'+'[#]'+msg)
