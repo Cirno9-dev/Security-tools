@@ -64,10 +64,10 @@ if __name__ == "__main__":
         passwds = getpasswds(options.file)
         # 显示进行中的动画
         count = 0
-        chartlist = ['\\','|','/']
+        chartlist = ['\\','|','/','-']
         for passwd in passwds:
             sys.stdout.write('\r'+' '*30)
-            sys.stdout.write('\r[*] Start to Brute force '+chartlist[count%3]+'.')
+            sys.stdout.write('\r[*] Start to Brute force '+chartlist[count%4]+'.')
             sys.stdout.flush()
             count += 1
             flag = connect(options.target,options.user,passwd.strip())
