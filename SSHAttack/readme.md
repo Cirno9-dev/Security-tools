@@ -21,8 +21,10 @@
                             |  $$$$$$/      |  $$$$$$/                                  
                              \______/        \______/                                   
 ```
-a tool to attack the ssh<br>
-It can blast SSH account passwords.<br>
+a tool to attack the ssh.<br>
+It has two modes.<br>
+**MODE 1: SSH Cryptographic Burst Mode.**<br>
+**MODE 2: SSH Batch Remote Execution Command Mode.**<br>
 In the future, I'll add multithreaded blasting.<br>
 **Only for Unix or Linux systems!**
 
@@ -36,6 +38,17 @@ python SSHAttack.py
 
 ## Example
 
+MODE 1: SSH Cryptographic Burst Mode.
 ```shell
-python SSHAttack.py -t 192.168.220.140 -u msfadmin -f ssh.txt
+python SSHAttack.py -m 1
+
+[*] Input the target ip,user and password file:192.168.220.140 root passwd ssh.txt
+```
+
+MODE 2: SSH Batch Remote Execution Command Mode.
+```shell
+python SSHAttack.py -m 2
+
+[*] Input the targets file:targets.txt
+[*] Input the command:whoami
 ```

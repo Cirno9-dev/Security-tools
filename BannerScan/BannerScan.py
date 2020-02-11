@@ -12,7 +12,7 @@ def conn(host,port):
         result = connect.recv(100)
         screenLock.acquire()
         print('[+] %d/tcp open'%port)
-        print('[+] %s\n'%result.decode('utf-8').split(' ')[0])
+        print('[+] %s\n'%result.decode('utf-8').strip())
     except:
         screenLock.acquire()
         print('[-] %d/tcp close\n'%port)
