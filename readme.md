@@ -2,10 +2,13 @@
 **This is my own security tool written in python3, and there may be some bugs.**<br>
 **If you have any suggestions, please contact me at 542233302@qq.com**
 ## Directory
-<a href="./DirScan">DirScan</a> :   a directory scan tool<br>
-<a href="./Fhost">Fhost</a> :   a tool to scan live host<br>
-<a href='./Rebound'>Rebound</a> :   A rebound shell program<br>
-<a href='./BannerScan'>BannerScan</a> : a tool to scan the target's service<br>
-<a href='./DicCreator'>DicCreator</a> : Generate a dictionary based on keywords<br>
-<a href='./FtpAttack'>FtpAttack</a> :   a tool to attack the ftp<br>
-<a href='./SSHAttack'>SSHAttack</a> :   a tool to attack the ssh<br>
+<ul>
+<li><a href="./DirScan">DirScan</a> :   a directory scan tool</li>
+<li><a href="./Fhost">Fhost</a> :   a tool to scan live host</li>
+<li><a href='./Rebound'>Rebound</a> :   A rebound shell program</li>
+<li><a href='./BannerScan'>BannerScan</a> : a tool to scan the target's service</li>
+<li><a href='./DicCreator'>DicCreator</a> : Generate a dictionary based on keywords</li>
+<li><a href='./FtpAttack'>FtpAttack</a> :   a tool to attack the ftp</li>
+<li><a href='./SSHAttack'>SSHAttack</a> :   a tool to attack the ssh</li>
+<li><a href='./DiscoverNet'>DiscoverNet</a> :   a Digital forensics tool</li>
+</ul>
