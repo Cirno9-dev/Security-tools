@@ -13,5 +13,5 @@
 <li><a href='./DiscoverNet'>DiscoverNet</a> :   a Digital forensics tool</li>
 <li><a href='./MetaData'>MetaData</a> :   a tool to read the metadata of the file</li>
 <li><a href='./IP2Loc'>IP2Loc</a> :   a tool to get some information from the IP</li>
-<li><a href='./PackAnal'>IP2Loc</a> :   a tool to analysis packet</li>
+<li><a href='./PackAnal'>PackAnal</a> :   a tool to analysis packet</li>
 </ul>
