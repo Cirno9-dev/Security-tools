@@ -21,7 +21,7 @@
                       |  $$$$$$/      |  $$$$$$/                         
                        \______/        \______/                          
 ```
-The ip2Loc database uses GeoLite2-City_20200211.tar.gz.<br>
+The ip2Loc database uses GeoLite2-City_20200303.tar.gz.<br>
 You can get it from <a href='https://www.maxmind.com/'>maxmind</a><br>
 You can update the database by yourself.<br>
 It can analysis th packet.
