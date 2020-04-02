@@ -2,6 +2,8 @@ import requests
 import re
 from bs4 import BeautifulSoup
 import json
+import os
+import sqlite3
 
 def getCVEurl():
     #定义headers
@@ -51,24 +53,75 @@ def getCVEinfo(cveurl):
     return cve_description
 
 def getTranslation(text):
+    headers = {
+        'User-Agent':'Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101 Firefox/52.0',
+        'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+        'Accept-Language':'zh-CN,zh;q=0.8,en-US;q=0.5,en;q=0.3',
+        'Accept-Encoding':'gzip, deflate',
+        'Upgrade-Insecure-Requests':'1',
+    }
     #调用Google翻译，来对英文描述进行翻译
     url = "https://translate.google.cn/translate_a/single?client=gtx&sl=en&tl=zh-CN&dt=t&q="+text
-    jsondata = json.loads(requests.get(url).text)
+    jsondata = json.loads(requests.get(url,headers=headers).text)
     translation = ""
     for data in jsondata[0]:
         translation += data[0]
     return translation
 
+#创建数据库
+def initCVEdb():
+    conn = sqlite3.connect("CVE.db")
+    createsql = """Create Table IF NOT EXISTS CVEinfo (
+        date TEXT,
+        CVEId TEXT,
+        URL TEXT,
+        description_En TEXT,
+        description_Zh TEXT)"""
+    conn.execute(createsql)
+    conn.commit()
+    conn.close()
+
+#判断今天是否已经写入,并将存在的进行输出，减少requests的次数
+def checkToday(date):
+    conn = sqlite3.connect("CVE.db")
+    conn.isolation_level = None
+    cur = conn.cursor()
+    cur.execute('SELECT * FROM CVEinfo WHERE date='+'\''+date+'\'')
+    res = cur.fetchall()
+    conn.close()
+    for data in res:
+        print("\033[32m[+]\033[0m "+data[1])
+        print("\033[32m[+]\033[0m Url : "+data[2])
+        print("\033[32m[+]\033[0m Description-En : "+data[3])
+        print("\033[32m[+]\033[0m Description-Zh : "+data[4]+"\n")
+    return len(res)
+
+#将CVE数据写入数据库中
+def writeCVEdb(date,CVEId,url,description_En,description_Zh):
+    conn = sqlite3.connect("CVE.db")
+    conn.isolation_level = None
+    cur = conn.cursor()
+    cur.execute("INSERT INTO CVEinfo (date,CVEId,URL,description_En,description_Zh) VALUES(\"{}\",\"{}\",\"{}\",\"{}\",\"{}\")".format(date,CVEId,url,description_En,description_Zh))
+    conn.close()
+
 if __name__ == "__main__":
-    print("\t每天17:02网站更新漏洞.")
+    print("Hello!")
+    os.system("whoami")
+    print("每天17:02网站更新漏洞.\n")
     time,cveurls = getCVEurl()
     #输出时间
     print("\t\t"+time[0])
     print("="*50)
+    #判断是否存在数据库以及今天是否已经写入
+    if not os.path.exists("CVE.db"):
+        initCVEdb()
+    flag = checkToday(time[0])
     #输出url和编号,描述和中文翻译
-    for cveurl in cveurls:
-        print("\033[32m[+]\033[0m {} : {}".format("CVE-"+cveurl[1],cveurl[0]))
-        description_En = getCVEinfo(cveurl[0])
+    for i in range(flag,len(cveurls)):
+        print("\033[32m[+]\033[0m CVE-"+cveurls[i][1])
+        print("\033[32m[+]\033[0m Url : "+cveurls[i][0])
+        description_En = getCVEinfo(cveurls[i][0]).replace("\"","\'")
         print("\033[32m[+]\033[0m Description-En : "+description_En.strip())
-        description_Zh = getTranslation(description_En.strip())
+        description_Zh = getTranslation(description_En.strip()).replace("\"","\'")
         print("\033[32m[+]\033[0m Description-Zh : "+description_Zh.strip()+"\n")
+        writeCVEdb(time[0],"CVE-"+cveurls[i][1],cveurls[i][0],description_En.strip(),description_Zh.strip())
