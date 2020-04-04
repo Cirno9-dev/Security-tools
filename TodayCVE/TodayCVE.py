@@ -4,6 +4,7 @@ from bs4 import BeautifulSoup
 import json
 import os
 import sqlite3
+import time
 
 def getCVEurl():
     #定义headers
@@ -50,9 +51,14 @@ def getCVEinfo(cveurl):
     #找到描述所在区间，并得到描述
     table = soup.find("div",id='GeneratedTable').find("table")
     cve_description = table.find_all("tr")[3].find("td").string
-    return cve_description
+    if cve_description:
+        return cve_description
+    else:
+        return "None"
 
 def getTranslation(text):
+    if text == "None":
+        return "None"
     headers = {
         'User-Agent':'Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101 Firefox/52.0',
         'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
@@ -107,15 +113,16 @@ def writeCVEdb(date,CVEId,url,description_En,description_Zh):
 if __name__ == "__main__":
     print("Hello!")
     os.system("whoami")
+    print("数据来源:https://cassandra.cerias.purdue.edu/CVE_changes/today.html")
     print("每天17:02网站更新漏洞.\n")
-    time,cveurls = getCVEurl()
+    today,cveurls = getCVEurl()
     #输出时间
-    print("\t\t"+time[0])
+    print("\t\t"+today[0])
     print("="*50)
     #判断是否存在数据库以及今天是否已经写入
     if not os.path.exists("CVE.db"):
         initCVEdb()
-    flag = checkToday(time[0])
+    flag = checkToday(today[0])
     #输出url和编号,描述和中文翻译
     for i in range(flag,len(cveurls)):
         print("\033[32m[+]\033[0m CVE-"+cveurls[i][1])
@@ -124,4 +131,6 @@ if __name__ == "__main__":
         print("\033[32m[+]\033[0m Description-En : "+description_En.strip())
         description_Zh = getTranslation(description_En.strip()).replace("\"","\'")
         print("\033[32m[+]\033[0m Description-Zh : "+description_Zh.strip()+"\n")
-        writeCVEdb(time[0],"CVE-"+cveurls[i][1],cveurls[i][0],description_En.strip(),description_Zh.strip())
+        writeCVEdb(today[0],"CVE-"+cveurls[i][1],cveurls[i][0],description_En.strip(),description_Zh.strip())
+        #暂停，防止Google翻译对IP进行限制。。。。
+        time.sleep(5)
