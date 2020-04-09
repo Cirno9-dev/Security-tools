@@ -5,6 +5,7 @@ import json
 import os
 import sqlite3
 import time
+from optparse import OptionParser
 
 def getCVEurl():
     #定义headers
@@ -110,7 +111,7 @@ def writeCVEdb(date,CVEId,url,description_En,description_Zh):
     cur.execute("INSERT INTO CVEinfo (date,CVEId,URL,description_En,description_Zh) VALUES(\"{}\",\"{}\",\"{}\",\"{}\",\"{}\")".format(date,CVEId,url,description_En,description_Zh))
     conn.close()
 
-if __name__ == "__main__":
+def update():
     print("Hello!")
     os.system("whoami")
     print("数据来源:https://cassandra.cerias.purdue.edu/CVE_changes/today.html")
@@ -134,3 +135,36 @@ if __name__ == "__main__":
         writeCVEdb(today[0],"CVE-"+cveurls[i][1],cveurls[i][0],description_En.strip(),description_Zh.strip())
         #暂停，防止Google翻译对IP进行限制。。。。
         time.sleep(5)
+
+def search(keyword):
+    print("Hello!")
+    os.system("whoami")
+    print("Search for: "+keyword+"\n")
+    conn = sqlite3.connect("CVE.db")
+    conn.isolation_level = None
+    cur = conn.cursor()
+    cur.execute('SELECT * FROM CVEinfo WHERE description_En LIKE \'%{}%\' OR description_Zh LIKE \'%{}%\''.format(keyword,keyword))
+    res = cur.fetchall()
+    conn.close()
+    for data in res:
+        print("\033[32m[+]\033[0m "+data[1])
+        print("\033[32m[+]\033[0m Url : "+data[2])
+        print("\033[32m[+]\033[0m Description-En : "+data[3])
+        print("\033[32m[+]\033[0m Description-Zh : "+data[4]+"\n")
+
+if __name__ == "__main__":
+    parse = OptionParser()
+    parse.add_option("-u",dest="update",action='store_true',help='update the CVEs in today.')
+    parse.add_option('-s',dest='search',help='search the CVEs which have the key word.')
+    (options,args)=parse.parse_args()
+
+    if options.update or options.search:
+        if options.update:
+            update()
+        if options.search:
+            search(options.search)
+    else:
+        parse.print_help()
+        print('\nExample:')
+        print('[#]-> python3 TodayCVE.py -u')
+        print('[#]-> python3 TodayCVE.py -s linux')

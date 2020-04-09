@@ -9,6 +9,9 @@ Translate API is google translate.<br>
 **4.1: Add a database to save the cve data.{date,CVEId,URL,description_En,description_Zh}**<br>
 Reduce the time to get the information which database has.<br>
 
+**4.9: Add the ability to search**<br>
+Excute: SELECT * FROM CVEinfo WHERE description_En LIKE '%{}%' OR description_Zh LIKE '%{}%'
+
 ## Usage
 
 ```shell
@@ -19,5 +22,9 @@ python TodayCVE.py
 ## Example
 
 ```shell
-python TodayCVE.py
+python TodayCVE.py -u
+```
+
+```shell
+python TodayCVE.py -s linux
 ```
