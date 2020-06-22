@@ -53,7 +53,7 @@ if __name__ == "__main__":
         if options.file.split('.')[-1] not in end:
             print('[-] Invalid suffix!')
             exit()
-        if options.file.split('.')[-1] == '.pdf':
+        if options.file.split('.')[-1] == 'pdf':
             getPDF(options.file)
         else:
             getpic(options.file)
