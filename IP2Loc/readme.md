@@ -23,7 +23,7 @@
 ```
 A tool to get some information from the IP.<br>
 The database is from <a href='https://www.maxmind.com/'>maxmind</a>.<br>
-Database uses GeoLite2-City_20200303.tar.gz.<br>
+Database uses GeoLite2-City_20200616.tar.gz.<br>
 You can update the database by yourself.<br>
 
 # Usage
