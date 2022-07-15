@@ -1,6 +1,6 @@
 # Security Tools
 **This is my own security tool written in python3, and there may be some bugs.**<br>
-**If you have any suggestions, please contact me at 542233302@qq.com**
+**If you have any suggestions, please contact me at junxiu.li@foxmail.com**
 ## Directory
 <ul>
 <li><a href="./DirScan">DirScan</a> :   a directory scan tool</li>
